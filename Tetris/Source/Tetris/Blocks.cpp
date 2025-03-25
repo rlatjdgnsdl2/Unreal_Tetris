@@ -159,13 +159,12 @@ void ABlocks::GetBlockOffset(const FName& BlockTypeName)
 {
 	if (BlockOffsetTable)
 	{
-		// 해당 BlockType의 데이터를 찾기
+
 		FBlockOffSet* BlockOffsets = BlockOffsetTable->FindRow<FBlockOffSet>(BlockTypeName, nullptr);
 
-		// 데이터를 찾았을 때
+
 		if (BlockOffsets)
 		{
-			// 해당 BlockType에 맞는 오프셋 값을 MeshComponents에 반영
 			BlockArray[0]->SetActorRelativeLocation(BlockOffsets->Offset1);
 			BlockArray[1]->SetActorRelativeLocation(BlockOffsets->Offset2);
 			BlockArray[2]->SetActorRelativeLocation(BlockOffsets->Offset3);
