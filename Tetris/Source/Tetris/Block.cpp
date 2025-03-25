@@ -22,7 +22,6 @@ void ABlock::BeginPlay()
 void ABlock::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 
