@@ -31,18 +31,21 @@ void ABlocks::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
-		AActor* CurrentCamera = PlayerController->GetViewTarget(); 
+		AActor* CurrentCamera = PlayerController->GetViewTarget();
 		PlayerController->Possess(this);
 		PlayerController->SetViewTargetWithBlend(CurrentCamera, 0.0f);
 	}
 	for (int32 i = 0; i < 4; i++)
 	{
-		ABlock* NewBlock = GetWorld()->SpawnActor<ABlock>(BlockClass);
-		if (NewBlock)
+		if (BlockClass)
 		{
-			NewBlock->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
-			NewBlock->SetActorRelativeLocation(FVector(0, 0, 0));
-			BlockArray.Add(NewBlock);
+			ABlock* NewBlock = GetWorld()->SpawnActor<ABlock>(BlockClass);
+			if (NewBlock)
+			{
+				NewBlock->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+				NewBlock->SetActorRelativeLocation(FVector(0, 0, 0));
+				BlockArray.Add(NewBlock);
+			}
 		}
 	}
 	InitBlock();
@@ -52,6 +55,10 @@ void ABlocks::BeginPlay()
 void ABlocks::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (IsAllBlocksDestroyed())
+	{
+		Destroy();
+	}
 
 }
 
@@ -93,8 +100,11 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		{
 			EnhancedInput->BindAction(RandomBlockAction, ETriggerEvent::Started, this, &ABlocks::RandomBlock);
 		}
+		if (nullptr != SetAction)
+		{
+			EnhancedInput->BindAction(SetAction, ETriggerEvent::Started, this, &ABlocks::SetBlock);
+		}
 	}
-
 }
 
 void ABlocks::MoveUp(const FInputActionValue& Value)
@@ -133,7 +143,7 @@ void ABlocks::RandomBlock(const FInputActionValue& Value)
 
 void ABlocks::InitBlock()
 {
-	
+
 	SetActorLocation(FVector(0, 0, 0));
 	FName BlockTypeName = TEXT("");
 	switch (BlockType)
@@ -178,6 +188,33 @@ void ABlocks::GetBlockOffset(const FName& BlockTypeName)
 			BlockArray[2]->SetActorRelativeLocation(BlockOffsets->Offset3);
 			BlockArray[3]->SetActorRelativeLocation(BlockOffsets->Offset4);
 		}
+	}
+}
+
+bool ABlocks::IsAllBlocksDestroyed()
+{
+	for (ABlock* Block : BlockArray)
+	{
+		if (IsValid(Block)) // 블록이 아직 살아있으면 false
+		{
+			return false;
+		}
+	}
+	return true; // 모든 블록이 삭제됨
+}
+
+void ABlocks::SetBlock(const FInputActionValue& Value)
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		AActor* CurrentCamera = PlayerController->GetViewTarget();
+		PlayerController->UnPossess();
+		PlayerController->SetViewTargetWithBlend(CurrentCamera, 0.0f);
+	}
+	if (BlockClass)
+	{
+		ABlock* NewBlock = GetWorld()->SpawnActor<ABlock>(BlockClass);
 	}
 }
 

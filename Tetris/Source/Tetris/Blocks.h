@@ -67,8 +67,14 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* RandomBlockAction;
 
+	UPROPERTY(EditDefaultsOnly)
+	UInputAction* SetAction;
+
 	void InitBlock();
 	void GetBlockOffset(const FName& BlockType);
+	bool IsAllBlocksDestroyed();
+
+	void SetBlock(const FInputActionValue& Value);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
 
@@ -85,5 +91,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
 	TSubclassOf<ABlock> BlockClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
+	TSubclassOf<ABlocks> BlocksClass;
 
 };
