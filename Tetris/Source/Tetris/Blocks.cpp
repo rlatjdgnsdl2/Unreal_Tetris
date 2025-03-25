@@ -42,7 +42,7 @@ void ABlocks::BeginPlay()
 			ABlock* NewBlock = GetWorld()->SpawnActor<ABlock>(BlockClass);
 			if (NewBlock)
 			{
-				NewBlock->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+				NewBlock->AttachToActor(this, FAttachmentTransformRules::SnapToTargetIncludingScale);
 				NewBlock->SetActorRelativeLocation(FVector(0, 0, 0));
 				BlockArray.Add(NewBlock);
 			}
@@ -214,7 +214,7 @@ void ABlocks::SetBlock(const FInputActionValue& Value)
 	}
 	if (BlockClass)
 	{
-		ABlock* NewBlock = GetWorld()->SpawnActor<ABlock>(BlockClass);
+		ABlocks* NewBlock = GetWorld()->SpawnActor<ABlocks>(BlocksClass);
 	}
 }
 
