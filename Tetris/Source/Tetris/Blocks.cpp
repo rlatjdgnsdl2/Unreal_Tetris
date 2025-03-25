@@ -22,29 +22,23 @@ ABlocks::ABlocks()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
-	for (int32 i = 0; i < 4; i++)
-	{
-		FString ComponentName = FString::Printf(TEXT("MeshComponent_%d"), i);
-		UStaticMeshComponent* NewMesh = CreateDefaultSubobject<UStaticMeshComponent>(*ComponentName);
-
-		if (NewMesh)
-		{
-			NewMesh->SetupAttachment(RootComponent);
-			MeshComponents.Add(NewMesh);
-		}
-	}
-
-
-
 }
 
 // Called when the game starts or when spawned
 void ABlocks::BeginPlay()
 {
 	Super::BeginPlay();
+	for (int32 i = 0; i < 4; i++)
+	{
+		ABlock* NewBlock = GetWorld()->SpawnActor<ABlock>(BlockClass);
+		if (NewBlock)
+		{
+			NewBlock->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+			NewBlock->SetActorRelativeLocation(FVector(0, 0, 0));
+			BlockArray.Add(NewBlock);
+		}
+	}
 	InitBlock();
-
-
 }
 
 // Called every frame
@@ -88,12 +82,10 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		{
 			EnhancedInput->BindAction(RotateLeftAction, ETriggerEvent::Started, this, &ABlocks::RotateLeft);
 		}
-		if (nullptr != RotateRightAction)
+		if (nullptr != RandomBlockAction)
 		{
-			EnhancedInput->BindAction(RotateRightAction, ETriggerEvent::Started, this, &ABlocks::RotateRight);
+			EnhancedInput->BindAction(RandomBlockAction, ETriggerEvent::Started, this, &ABlocks::RandomBlock);
 		}
-
-
 	}
 
 }
@@ -123,7 +115,7 @@ void ABlocks::RotateLeft(const FInputActionValue& Value)
 	SetActorRotation(GetActorRotation() + FRotator(0, 90, 0));
 }
 
-void ABlocks::RotateRight(const FInputActionValue& Value)
+void ABlocks::RandomBlock(const FInputActionValue& Value)
 {
 	FRandomStream RandomStream;
 	RandomStream.GenerateNewSeed();
@@ -174,10 +166,10 @@ void ABlocks::GetBlockOffset(const FName& BlockTypeName)
 		if (BlockOffsets)
 		{
 			// 해당 BlockType에 맞는 오프셋 값을 MeshComponents에 반영
-			MeshComponents[0]->SetRelativeLocation(BlockOffsets->Offset1);
-			MeshComponents[1]->SetRelativeLocation(BlockOffsets->Offset2);
-			MeshComponents[2]->SetRelativeLocation(BlockOffsets->Offset3);
-			MeshComponents[3]->SetRelativeLocation(BlockOffsets->Offset4);
+			BlockArray[0]->SetActorRelativeLocation(BlockOffsets->Offset1);
+			BlockArray[1]->SetActorRelativeLocation(BlockOffsets->Offset2);
+			BlockArray[2]->SetActorRelativeLocation(BlockOffsets->Offset3);
+			BlockArray[3]->SetActorRelativeLocation(BlockOffsets->Offset4);
 		}
 	}
 }

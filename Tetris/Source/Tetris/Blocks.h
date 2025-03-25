@@ -45,7 +45,7 @@ public:
 	void MoveRight(const FInputActionValue& Value);
 
 	void RotateLeft(const FInputActionValue& Value);
-	void RotateRight(const FInputActionValue& Value);
+	void RandomBlock(const FInputActionValue& Value);
 
 	UPROPERTY(EditDefaultsOnly)
 	UInputMappingContext* InputMappingContext;
@@ -65,7 +65,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* RotateLeftAction;
 	UPROPERTY(EditDefaultsOnly)
-	UInputAction* RotateRightAction;
+	UInputAction* RandomBlockAction;
 
 	void InitBlock();
 	void GetBlockOffset(const FName& BlockType);
@@ -79,7 +79,11 @@ public:
 	UDataTable* BlockOffsetTable;
 
 	EBlockType BlockType = EBlockType::Z;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
+	TArray<ABlock*> BlockArray;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
+	TSubclassOf<ABlock> BlockClass;
 
 };
