@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "MyData.h"
 #include "Blocks.generated.h"
 
 
@@ -11,6 +12,12 @@ class ABlock;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+
+class UStaticMeshComponent;
+
+class UDataTable;
+
+
 
 UCLASS()
 class TETRIS_API ABlocks : public APawn
@@ -25,7 +32,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -60,9 +67,19 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* RotateRightAction;
 
+	void InitBlock();
+	void GetBlockOffset(const FName& BlockType);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
+
+	TArray<UStaticMeshComponent*> MeshComponents;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
-	TArray<ABlock*> Blocks;
+	UDataTable* BlockOffsetTable;
+
+	EBlockType BlockType = EBlockType::Z;
+
+
 
 };

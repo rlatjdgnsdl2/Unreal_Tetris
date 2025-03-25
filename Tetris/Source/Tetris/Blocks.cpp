@@ -7,18 +7,43 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 
+#include "Block.h"
+
+#include "Engine/DataTable.h"
+
+#include "Components/StaticMeshComponent.h"
+
 // Sets default values
 ABlocks::ABlocks()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	OverrideInputComponentClass = UEnhancedInputComponent::StaticClass();
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	for (int32 i = 0; i < 4; i++)
+	{
+		FString ComponentName = FString::Printf(TEXT("MeshComponent_%d"), i);
+		UStaticMeshComponent* NewMesh = CreateDefaultSubobject<UStaticMeshComponent>(*ComponentName);
+
+		if (NewMesh)
+		{
+			NewMesh->SetupAttachment(RootComponent);
+			MeshComponents.Add(NewMesh);
+		}
+	}
+
+
+
 }
 
 // Called when the game starts or when spawned
 void ABlocks::BeginPlay()
 {
 	Super::BeginPlay();
+	InitBlock();
+
 
 }
 
@@ -45,7 +70,7 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		if (nullptr != MoveUpAction)
 		{
-			EnhancedInput->BindAction(MoveUpAction,ETriggerEvent::Started,this,&ABlocks::MoveUp);
+			EnhancedInput->BindAction(MoveUpAction, ETriggerEvent::Started, this, &ABlocks::MoveUp);
 		}
 		if (nullptr != MoveDownAction)
 		{
@@ -75,12 +100,12 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABlocks::MoveUp(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(0, 0, 100));
+	SetActorLocation(GetActorLocation() + FVector(100, 0, 0));
 }
 
 void ABlocks::MoveDown(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(0, 0, -100));
+	SetActorLocation(GetActorLocation() + FVector(-100, 0, 0));
 }
 
 void ABlocks::MoveLeft(const FInputActionValue& Value)
@@ -95,13 +120,68 @@ void ABlocks::MoveRight(const FInputActionValue& Value)
 
 void ABlocks::RotateLeft(const FInputActionValue& Value)
 {
-	
+	SetActorRotation(GetActorRotation() + FRotator(0, 90, 0));
 }
 
 void ABlocks::RotateRight(const FInputActionValue& Value)
 {
-	
+	FRandomStream RandomStream;
+	RandomStream.GenerateNewSeed();
+	int32 RandomNumber = RandomStream.RandRange(0, 6);
+	BlockType = (EBlockType)RandomNumber;
+	InitBlock();
 }
+
+void ABlocks::InitBlock()
+{
+	SetActorLocation(FVector(0, 0, 0));
+	FName BlockTypeName = TEXT("");
+	switch (BlockType)
+	{
+	case EBlockType::Z:
+		BlockTypeName = TEXT("Z");
+		break;
+	case EBlockType::S:
+		BlockTypeName = TEXT("S");
+		break;
+	case EBlockType::I:
+		BlockTypeName = TEXT("I");
+		break;
+	case EBlockType::J:
+		BlockTypeName = TEXT("J");
+		break;
+	case EBlockType::O:
+		BlockTypeName = TEXT("O");
+		break;
+	case EBlockType::T:
+		BlockTypeName = TEXT("T");
+		break;
+	case EBlockType::L:
+		BlockTypeName = TEXT("L");
+		break;
+	}
+	GetBlockOffset(BlockTypeName);
+}
+
+void ABlocks::GetBlockOffset(const FName& BlockTypeName)
+{
+	if (BlockOffsetTable)
+	{
+		// 해당 BlockType의 데이터를 찾기
+		FBlockOffSet* BlockOffsets = BlockOffsetTable->FindRow<FBlockOffSet>(BlockTypeName, nullptr);
+
+		// 데이터를 찾았을 때
+		if (BlockOffsets)
+		{
+			// 해당 BlockType에 맞는 오프셋 값을 MeshComponents에 반영
+			MeshComponents[0]->SetRelativeLocation(BlockOffsets->Offset1);
+			MeshComponents[1]->SetRelativeLocation(BlockOffsets->Offset2);
+			MeshComponents[2]->SetRelativeLocation(BlockOffsets->Offset3);
+			MeshComponents[3]->SetRelativeLocation(BlockOffsets->Offset4);
+		}
+	}
+}
+
 
 
 
