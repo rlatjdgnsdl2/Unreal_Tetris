@@ -20,7 +20,7 @@ ABlocks::ABlocks()
 	PrimaryActorTick.bCanEverTick = true;
 	OverrideInputComponentClass = UEnhancedInputComponent::StaticClass();
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 }
 
@@ -109,22 +109,22 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABlocks::MoveUp(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(100, 0, 0));
+	SetActorLocation(GetActorLocation() + FVector(100, 0, 0),true);
 }
 
 void ABlocks::MoveDown(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(-100, 0, 0));
+	SetActorLocation(GetActorLocation() + FVector(-100, 0, 0), true);
 }
 
 void ABlocks::MoveLeft(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(0, -100, 0));
+	SetActorLocation(GetActorLocation() + FVector(0, -100, 0), true);
 }
 
 void ABlocks::MoveRight(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(0, 100, 0));
+	SetActorLocation(GetActorLocation() + FVector(0, 100, 0), true);
 }
 
 void ABlocks::RotateLeft(const FInputActionValue& Value)
