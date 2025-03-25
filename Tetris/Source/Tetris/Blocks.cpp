@@ -28,6 +28,13 @@ ABlocks::ABlocks()
 void ABlocks::BeginPlay()
 {
 	Super::BeginPlay();
+	APlayerController* PlayerController = Cast<APlayerController>(GetWorld()->GetFirstPlayerController());
+	if (PlayerController)
+	{
+		AActor* CurrentCamera = PlayerController->GetViewTarget(); 
+		PlayerController->Possess(this);
+		PlayerController->SetViewTargetWithBlend(CurrentCamera, 0.0f);
+	}
 	for (int32 i = 0; i < 4; i++)
 	{
 		ABlock* NewBlock = GetWorld()->SpawnActor<ABlock>(BlockClass);
@@ -126,6 +133,7 @@ void ABlocks::RandomBlock(const FInputActionValue& Value)
 
 void ABlocks::InitBlock()
 {
+	
 	SetActorLocation(FVector(0, 0, 0));
 	FName BlockTypeName = TEXT("");
 	switch (BlockType)
