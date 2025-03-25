@@ -9,6 +9,8 @@
 /**
  * 
  */
+
+class UMyDataAsset;
 UCLASS()
 class TETRIS_API AMainCameraActor : public ACameraActor
 {
@@ -16,5 +18,7 @@ class TETRIS_API AMainCameraActor : public ACameraActor
 
 public:
 	virtual void BeginPlay() override;	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UMyDataAsset* MapSize;
 	
 };
