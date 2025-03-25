@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "GameMap.generated.h"
 
 class UMyDataAsset;
 
 UCLASS()
-class TETRIS_API AGameMap : public AActor
+class TETRIS_API AGameMap : public APawn
 {
 	GENERATED_BODY()
 	
