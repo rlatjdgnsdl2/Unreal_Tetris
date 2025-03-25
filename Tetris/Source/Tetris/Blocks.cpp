@@ -106,27 +106,27 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABlocks::MoveUp(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(100, 0, 0),true);
+	CheckMoveable(FVector(100, 0, 0));
 }
 
 void ABlocks::MoveDown(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(-100, 0, 0), true);
+	CheckMoveable(FVector(-100, 0, 0));
 }
 
 void ABlocks::MoveLeft(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(0, -100, 0), true);
+	CheckMoveable(FVector(0, -100, 0));
 }
 
 void ABlocks::MoveRight(const FInputActionValue& Value)
 {
-	SetActorLocation(GetActorLocation() + FVector(0, 100, 0), true);
+	CheckMoveable(FVector(0, 100, 0));
 }
 
 void ABlocks::RotateLeft(const FInputActionValue& Value)
 {
-	SetActorRotation(GetActorRotation() + FRotator(0, 90, 0));
+	CheckRotateable(FRotator(0, 90, 0));
 }
 
 void ABlocks::RandomBlock(const FInputActionValue& Value)
@@ -212,7 +212,53 @@ void ABlocks::SetBlock(const FInputActionValue& Value)
 	if (BlockClass)
 	{
 		ABlocks* NewBlock = GetWorld()->SpawnActor<ABlocks>(BlocksClass);
+		
 	}
+}
+
+void ABlocks::CheckMoveable(const FVector& Dir)
+{
+	bool CanMoveAllChildren = true;
+	for (ABlock* Block : BlockArray)
+	{
+		if (Block)
+		{
+			FVector StartLocation = Block->GetActorLocation();
+			FVector EndLocation = StartLocation + Dir;
+
+			FCollisionQueryParams QueryParams;
+			QueryParams.AddIgnoredActor(this);
+			QueryParams.AddIgnoredActor(Block);
+
+			FHitResult HitResult;
+
+			bool bHit = GetWorld()->LineTraceSingleByChannel(
+				HitResult,
+				StartLocation,
+				EndLocation,
+				ECC_Visibility,
+				QueryParams
+			);
+
+			if (bHit)
+			{
+				CanMoveAllChildren = false;
+				break;
+			}
+		}
+	}
+
+
+	if (CanMoveAllChildren)
+	{
+		FVector ParentNewLocation = GetActorLocation() + Dir;
+		SetActorLocation(ParentNewLocation, true);
+	}
+}
+
+void ABlocks::CheckRotateable(const FRotator& Rotation)
+{
+	
 }
 
 

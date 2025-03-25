@@ -75,10 +75,14 @@ public:
 	bool IsAllBlocksDestroyed();
 
 	void SetBlock(const FInputActionValue& Value);
+	void CheckMoveable(const FVector& Dir);
+	void CheckRotateable(const FRotator& Rotation);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
 
 	TArray<UStaticMeshComponent*> MeshComponents;
+
+
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")

@@ -20,7 +20,7 @@ void AGameMap::BeginPlay()
 	Super::BeginPlay();
 	if (MapSize != nullptr)
 	{
-		SetActorScale3D(FVector(MapSize->Width+2, MapSize->Height+2, 1));
+		SetActorRelativeScale3D(FVector(MapSize->Width+2, MapSize->Height+2, 1));
 	}
 }
 
