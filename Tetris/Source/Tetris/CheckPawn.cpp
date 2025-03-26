@@ -89,8 +89,7 @@ void ACheckPawn::CheckLine(int Width, int Height)
 
 				);
 
-				DrawDebugLine(GetWorld(), StartLocationn, EndLocationn, FColor::Green, false, 1.0f, 0, 2.0f);
-				DrawDebugSphere(GetWorld(), StartLocationn, 10.0f, 12, FColor::Blue, false, 1.0f);  
+			
 				for (FHitResult& HitResultt : HitResultss)
 				{
 					if (HitResultt.GetActor() && HitResultt.GetActor()->IsA<ABlock>())
