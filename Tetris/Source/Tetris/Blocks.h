@@ -88,7 +88,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
 	UDataTable* BlockOffsetTable;
 
-	EBlockType BlockType = EBlockType::Z;
+	EBlockType BlockType = EBlockType::I;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
 	TArray<ABlock*> BlockArray;
 
@@ -97,5 +97,6 @@ public:
 	TSubclassOf<ABlock> BlockClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
 	TSubclassOf<ABlocks> BlocksClass;
+
 
 };

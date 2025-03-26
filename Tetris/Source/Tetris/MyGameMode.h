@@ -15,6 +15,6 @@ class TETRIS_API AMyGameMode : public AGameMode
 	GENERATED_BODY()
 
 public:
-	
+	virtual void BeginPlay() override;
 	
 };

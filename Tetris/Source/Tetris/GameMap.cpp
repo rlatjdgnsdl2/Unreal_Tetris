@@ -7,6 +7,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
+#include "CheckPawn.h"
+
+#include "Block.h"
+
 // Sets default values
 AGameMap::AGameMap()
 {
@@ -20,14 +24,39 @@ void AGameMap::BeginPlay()
 	Super::BeginPlay();
 	if (MapSize != nullptr)
 	{
-		SetActorRelativeScale3D(FVector(MapSize->Width, MapSize->Height, 1));
+		SetActorRelativeScale3D(FVector( MapSize->Height, MapSize->Width, 1));
+		float StartX = (- 50.0f * MapSize->Width) + 50.0f;
+		float StartY = -50.0f * MapSize->Height;
+
+		for (int i = 0; i < MapSize->Height; i++)
+		{
+			ACheckPawn* CheckPawn = GetWorld()->SpawnActor<ACheckPawn>(CheckPawnClass);
+			if (CheckPawn)
+			{
+				CheckPawn->SetActorLocation(FVector(StartX + (i * 100.0f), StartY, 0.0f));
+				CheckPawnArray.Add(CheckPawn);
+			}
+		}
 	}
+	
+
+
 }
 
 // Called every frame
 void AGameMap::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	BlockCheck();
+}
 
+void AGameMap::BlockCheck()
+{
+	for (ACheckPawn* CheckPawn : CheckPawnArray)
+	{
+		int Width = MapSize->Width;
+		CheckPawn->CheckLine(Width);
+	}
+	
 }
 

@@ -24,6 +24,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void BlockCheck();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMyDataAsset* MapSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<class ACheckPawn*> CheckPawnArray;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class ACheckPawn> CheckPawnClass;
+
 };

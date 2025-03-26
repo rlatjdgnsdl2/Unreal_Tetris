@@ -218,6 +218,8 @@ void ABlocks::SetBlock(const FInputActionValue& Value)
 			if (MeshComp)
 			{
 				MeshComp->SetCollisionProfileName(TEXT("BlockAll"));
+				MeshComp->BodyInstance.SetObjectType(ECollisionChannel::ECC_WorldDynamic);
+				
 			}
 		}
 	}
