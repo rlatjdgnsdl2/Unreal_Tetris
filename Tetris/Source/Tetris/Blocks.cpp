@@ -209,16 +209,29 @@ void ABlocks::SetBlock(const FInputActionValue& Value)
 		PlayerController->UnPossess();
 		PlayerController->SetViewTargetWithBlend(CurrentCamera, 0.0f);
 	}
+	for (ABlock* Block : BlockArray)
+	{
+		if (Block)
+		{
+			Block->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+			UStaticMeshComponent* MeshComp = Block->FindComponentByClass<UStaticMeshComponent>();
+			if (MeshComp)
+			{
+				MeshComp->SetCollisionProfileName(TEXT("BlockAll"));
+			}
+		}
+	}
+
 	if (BlockClass)
 	{
 		ABlocks* NewBlock = GetWorld()->SpawnActor<ABlocks>(BlocksClass);
-		
 	}
 }
 
 void ABlocks::CheckMoveable(const FVector& Dir)
 {
 	bool CanMoveAllChildren = true;
+
 	for (ABlock* Block : BlockArray)
 	{
 		if (Block)
@@ -227,11 +240,7 @@ void ABlocks::CheckMoveable(const FVector& Dir)
 			FVector EndLocation = StartLocation + Dir;
 
 			FCollisionQueryParams QueryParams;
-			QueryParams.AddIgnoredActor(this);
-			QueryParams.AddIgnoredActor(Block);
-
 			FHitResult HitResult;
-
 			bool bHit = GetWorld()->LineTraceSingleByChannel(
 				HitResult,
 				StartLocation,
@@ -240,14 +249,19 @@ void ABlocks::CheckMoveable(const FVector& Dir)
 				QueryParams
 			);
 
-			if (bHit)
+			// 디버그 라인 추가 (트레이스 확인)
+			DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 2.0f);
+
+			if (bHit) // 충돌한 경우만 처리
 			{
+
 				CanMoveAllChildren = false;
 				break;
+
+
 			}
 		}
 	}
-
 
 	if (CanMoveAllChildren)
 	{
@@ -258,7 +272,7 @@ void ABlocks::CheckMoveable(const FVector& Dir)
 
 void ABlocks::CheckRotateable(const FRotator& Rotation)
 {
-	
+
 }
 
 
