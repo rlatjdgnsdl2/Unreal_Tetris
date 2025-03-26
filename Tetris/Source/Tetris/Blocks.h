@@ -16,6 +16,7 @@ struct FInputActionValue;
 class UStaticMeshComponent;
 
 class UDataTable;
+class UMyDataAsset;
 
 
 
@@ -87,6 +88,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
 	UDataTable* BlockOffsetTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")
+	UMyDataAsset* MapSize;
+
 
 	EBlockType BlockType = EBlockType::I;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tetris")

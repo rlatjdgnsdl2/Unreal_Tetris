@@ -13,6 +13,8 @@
 
 #include "Components/StaticMeshComponent.h"
 
+#include "MyDataAsset.h"
+
 // Sets default values
 ABlocks::ABlocks()
 {
@@ -45,7 +47,7 @@ void ABlocks::BeginPlay()
 			}
 		}
 	}
-	InitBlock();
+	RandomBlock(FInputActionValue());
 }
 
 // Called every frame
@@ -79,8 +81,10 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		}
 		if (nullptr != MoveDownAction)
 		{
-			EnhancedInput->BindAction(MoveDownAction, ETriggerEvent::Started, this, &ABlocks::MoveDown);
+			EnhancedInput->BindAction(MoveDownAction, ETriggerEvent::Triggered, this, &ABlocks::MoveDown);
 		}
+	
+
 		if (nullptr != MoveLeftAction)
 		{
 			EnhancedInput->BindAction(MoveLeftAction, ETriggerEvent::Started, this, &ABlocks::MoveLeft);
@@ -141,7 +145,7 @@ void ABlocks::RandomBlock(const FInputActionValue& Value)
 void ABlocks::InitBlock()
 {
 
-	SetActorLocation(FVector(0, 0, 0));
+	SetActorLocation(FVector(MapSize->Height*100.0f*0.5f, 0, 0));
 	FName BlockTypeName = TEXT("");
 	switch (BlockType)
 	{
