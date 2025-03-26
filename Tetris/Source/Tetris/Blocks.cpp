@@ -272,7 +272,43 @@ void ABlocks::CheckMoveable(const FVector& Dir)
 
 void ABlocks::CheckRotateable(const FRotator& Rotation)
 {
+	bool CanRotateAllChildren = true;
 
+	FVector ParentLocation = GetActorLocation();
+
+	for (ABlock* Block : BlockArray)
+	{
+		if (Block)
+		{
+			FVector RelativeLocation = Block->GetActorLocation() - ParentLocation;
+			FVector RotatedLocation = Rotation.RotateVector(RelativeLocation) + ParentLocation;
+
+			FCollisionQueryParams QueryParams;
+	
+			FHitResult HitResult;
+			bool bHit = GetWorld()->LineTraceSingleByChannel(
+				HitResult,
+				Block->GetActorLocation(),
+				RotatedLocation,
+				ECC_Visibility,
+				QueryParams
+			);
+
+			// 디버그 라인 추가 (트레이스 확인)
+			DrawDebugLine(GetWorld(), Block->GetActorLocation(), RotatedLocation, FColor::Blue, false, 1.0f, 0, 2.0f);
+
+			if (bHit) // 충돌 발생
+			{
+				CanRotateAllChildren = false;
+				break;
+			}
+		}
+	}
+
+	if (CanRotateAllChildren)
+	{
+		SetActorRotation(GetActorRotation() + Rotation);
+	}
 }
 
 
