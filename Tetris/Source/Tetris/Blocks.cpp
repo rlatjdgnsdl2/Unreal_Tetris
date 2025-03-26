@@ -252,7 +252,7 @@ void ABlocks::CheckMoveable(const FVector& Dir)
 	if (CanMoveAllChildren)
 	{
 		FVector ParentNewLocation = GetActorLocation() + Dir;
-		SetActorLocation(ParentNewLocation, true);
+		SetActorLocation(ParentNewLocation);
 	}
 }
 
