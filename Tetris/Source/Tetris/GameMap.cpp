@@ -25,8 +25,8 @@ void AGameMap::BeginPlay()
 	if (MapSize != nullptr)
 	{
 		SetActorRelativeScale3D(FVector( MapSize->Height, MapSize->Width, 1));
-		float StartX = (- 50.0f * MapSize->Width) + 50.0f;
-		float StartY = -50.0f * MapSize->Height;
+		float StartX = (-0.5f * MapSize->Height) * 100.0f+50.0f;
+		float StartY = (-0.5f * MapSize->Width) * 100.0f;
 
 		for (int i = 0; i < MapSize->Height; i++)
 		{
