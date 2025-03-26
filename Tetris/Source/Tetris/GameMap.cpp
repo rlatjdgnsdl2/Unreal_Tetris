@@ -52,10 +52,11 @@ void AGameMap::Tick(float DeltaTime)
 
 void AGameMap::BlockCheck()
 {
+	int Width = MapSize->Width;
+	int Height = MapSize->Height;
 	for (ACheckPawn* CheckPawn : CheckPawnArray)
 	{
-		int Width = MapSize->Width;
-		CheckPawn->CheckLine(Width);
+		CheckPawn->CheckLine(Width, Height);
 	}
 	
 }

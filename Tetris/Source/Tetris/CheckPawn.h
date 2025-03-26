@@ -26,7 +26,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void CheckLine(int Width);
+	void CheckLine(int Width, int Height);
 
 	int CurCount = 0;
 	

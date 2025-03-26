@@ -34,7 +34,7 @@ void ACheckPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 }
 
-void ACheckPawn::CheckLine(int Width)
+void ACheckPawn::CheckLine(int Width, int Height)
 {
 	FVector StartLocation = GetActorLocation();
 	FVector EndLocation = StartLocation + FVector(0, Width * 100.0f, 0);
@@ -81,7 +81,37 @@ void ACheckPawn::CheckLine(int Width)
 			ABlock* Block = Cast<ABlock>(HitResult.GetActor());
 			if (Block)
 			{
+				FVector StartLocationn = Block->GetActorLocation();
+				FVector EndLocationn = StartLocationn + FVector(Height * 100.0f, 0.0f, 0.0f);
+				FCollisionQueryParams QueryParamss;
+				TArray<FHitResult> HitResultss;
+				GetWorld()->LineTraceMultiByObjectType(
+					HitResultss,
+					StartLocationn,
+					EndLocationn,
+					FCollisionObjectQueryParams(ECC_WorldDynamic),
+					QueryParamss
+
+				);
+
+				DrawDebugLine(GetWorld(), StartLocationn, EndLocationn, FColor::Green, false, 1.0f, 0, 2.0f);
+				DrawDebugSphere(GetWorld(), StartLocationn, 10.0f, 12, FColor::Blue, false, 1.0f);  
+				for (FHitResult& HitResultt : HitResultss)
+				{
+					if (HitResultt.GetActor() && HitResultt.GetActor()->IsA<ABlock>())
+					{
+						ABlock* Blockk = Cast<ABlock>(HitResultt.GetActor());
+						if (Blockk && !ProcessedActors.Contains(Blockk)) // 이미 처리한 블록은 제외
+						{
+							ProcessedActors.Add(Blockk);  // 처리한 블록을 추가
+							Blockk->SetActorLocation(Blockk->GetActorLocation() + FVector(-100.0f, 0.0f, 0.0f));
+						}
+					}
+				}
+
+
 				Block->Destroy();
+				
 			}
 		}
 	}
