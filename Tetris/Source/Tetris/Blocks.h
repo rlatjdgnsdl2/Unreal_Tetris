@@ -71,6 +71,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UInputAction* SetAction;
 
+	UPROPERTY(EditDefaultsOnly)
+	UInputAction* GameEndAction;
+
 	void InitBlock();
 	void GetBlockOffset(const FName& BlockType);
 	bool IsAllBlocksDestroyed();

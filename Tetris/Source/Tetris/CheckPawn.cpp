@@ -50,10 +50,7 @@ void ACheckPawn::CheckLine(int Width, int Height)
 		
 	);
 
-	// 디버그 라인 추가 (트레이스 확인)
-	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, 1.0f, 0, 2.0f);
-	DrawDebugSphere(GetWorld(), StartLocation, 10.0f, 12, FColor::Blue, false, 1.0f);  // 시작점에 스피어
-	DrawDebugSphere(GetWorld(), EndLocation, 10.0f, 12, FColor::Red, false, 1.0f);    // 끝점에 스피어
+	
 
 	CurCount = 0;  // Count 초기화 위치 수정
 	TArray<AActor*> ProcessedActors;  // 이미 처리한 Actor를 추적할 배열
@@ -70,8 +67,6 @@ void ACheckPawn::CheckLine(int Width, int Height)
 			}
 		}
 	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("CurCount : %d"), CurCount));
 
 	if (CurCount == Width)
 	{

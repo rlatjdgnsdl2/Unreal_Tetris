@@ -105,6 +105,17 @@ void ABlocks::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		{
 			EnhancedInput->BindAction(SetAction, ETriggerEvent::Started, this, &ABlocks::SetBlock);
 		}
+		if (nullptr != GameEndAction)
+		{
+			EnhancedInput->BindActionValueLambda(GameEndAction, ETriggerEvent::Started, [this](const FInputActionValue& Value) 
+				{
+					APlayerController* PlayerController = Cast<APlayerController>(GetController());
+					if (PlayerController)
+					{
+						PlayerController->ConsoleCommand(TEXT("quit"));
+					}
+				});
+		}
 	}
 }
 
@@ -255,8 +266,7 @@ void ABlocks::CheckMoveable(const FVector& Dir)
 				QueryParams
 			);
 
-			// 디버그 라인 추가 (트레이스 확인)
-			DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, false, 1.0f, 0, 2.0f);
+		
 
 			if (bHit) // 충돌한 경우만 처리
 			{
@@ -299,10 +309,6 @@ void ABlocks::CheckRotateable(const FRotator& Rotation)
 				ECC_Visibility,
 				QueryParams
 			);
-
-			// 디버그 라인 추가 (트레이스 확인)
-			DrawDebugLine(GetWorld(), Block->GetActorLocation(), RotatedLocation, FColor::Blue, false, 1.0f, 0, 2.0f);
-
 			if (bHit) // 충돌 발생
 			{
 				CanRotateAllChildren = false;
